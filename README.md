@@ -6,6 +6,23 @@ T-Deck Local LLM Chat for Circuit Python 9.2.9
 
 To chat with models hosted locally on LM Studio over the RESTful APIs, using the T-Deck running Circuit Python 9.
 
+### Status: Chat Mode
+
+Status: MVP for Chat functionality is working
+
+  - Can chat w/ llm on t-deck keyboard
+  - LLM Chats Back
+  - Need to work on being able to configure from the chat window with mIRC-style /slash commands.
+      Round 1 /slash command goals:
+        - /model model_name_here (to change the currently loaded model)
+        - /list_models (list models hosted by the server)
+        - /clear (cllear chat scroll window)
+  - Chat Log scrolling/buffering/saving is buggy, at best
+
+### Status: Voice Mode
+  - PoC, plays audio with an epic delay
+     - Need to tune the prompt for more concise responses
+     - Is this running the compiled flash-attn? It's built, unsure if it's being used.
 
 ### T-Deck Hardware considerations: 
 
@@ -13,6 +30,17 @@ To chat with models hosted locally on LM Studio over the RESTful APIs, using the
   - Display: eSPI TFT ST7789  (displayio installed)
   - Keyboard Drivers: https://github.com/rgrizzell/CircuitPython_LILYGO_T-Deck (installed)
   - Integrated i2s audio
+
+## Architecture Overview
+
+User -> types into T-Deck -> connects to LM Studio --> LLM Model
+
+Model response --> (Split output here, text + voice)--> Typed chat messages
+               --> Chatterbox-TTS (via TTS-WebUI as API) --> Spoken Responses
+
+Automatic Speech Recognition (ASR) is planned for a future release, but CircuitPython doesn't support i2s microphones(?) so I'll need to port this.
+Current STT Flow: User presses button on bluetooth microphone to kickoff the speech detection. This is done through browser plugins, outside of the scope of this project.
+
 
 ### Configuration
 Configuration is managed with a config file to centralize user-edited parameters. The file can be updated via /slash commands while the app is running.
