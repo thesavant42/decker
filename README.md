@@ -18,9 +18,9 @@ This is all super alpha early stuff It works, but it's not fast yet.
 
 ## Features
 
--- Text to Text!
--- Text to Speech!
---... that's pretty much it.
+  - Text to Text!
+  -  Text to Speech!
+  - ... that's pretty much it.
 
 
 
