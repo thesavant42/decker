@@ -158,7 +158,7 @@ POST /v1/embeddings
 POST /v1/completions
   ```
 
-  - List the available models - http://alfred.local:1234/v1/models
+  - List the available models - http://192.168.1.98:1234/v1/models
 
 # Response
 
