@@ -2,6 +2,8 @@
 
 T-Deck Local LLM Chat for Circuit Python 9.2.9 
 
+![Image of Interface](./deckchat.jpg)
+
 ## Goal
 
 To chat with models hosted locally on LM Studio over the RESTful APIs, using the T-Deck running Circuit Python 9.
@@ -11,6 +13,8 @@ To chat with models hosted locally on LM Studio over the RESTful APIs, using the
 - To learn a new technology stack
 - To make my robot more awesome
 - I couldn't find anything that did it exactly how I needed it
+
+This is all super alpha early stuff It works, but it's not fast yet.
 
 ### Status: Chat Mode
 
