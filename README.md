@@ -1,4 +1,4 @@
-# T-Deck LLLM Chat Hackathon
+# T-Deck LLM Chat Hackathon
 
 T-Deck Local LLM Chat for Circuit Python 9.2.9 
 
@@ -6,11 +6,17 @@ T-Deck Local LLM Chat for Circuit Python 9.2.9
 
 To chat with models hosted locally on LM Studio over the RESTful APIs, using the T-Deck running Circuit Python 9.
 
+## Why?
+
+- To learn a new technology stack
+- To make my robot more awesome
+- I couldn't find anything that did it exactly how I needed it
+
 ### Status: Chat Mode
 
 Status: MVP for Chat functionality is working
 
-  - Can chat w/ llm on t-deck keyboard
+  - User is able to chat w/ llm on t-deck keyboard
   - LLM Chats Back
   - Need to work on being able to configure from the chat window with mIRC-style /slash commands.
       Round 1 /slash command goals:
@@ -40,6 +46,57 @@ Model response --> (Split output here, text + voice)--> Typed chat messages
 
 Automatic Speech Recognition (ASR) is planned for a future release, but CircuitPython doesn't support i2s microphones(?) so I'll need to port this.
 Current STT Flow: User presses button on bluetooth microphone to kickoff the speech detection. This is done through browser plugins, outside of the scope of this project.
+
+## Installation
+
+1. Install CircuitPython 9.2.9 on your T-Deck.
+2. Install the required libraries using `circup`:
+   ```
+   circup install -r requirements.txt
+   ```
+3. Copy the `tdeck_chat_app` directory to your T-Deck's `CIRCUITPY` drive.
+4. Update the WiFi credentials in `main.py`.
+5. Run the application.
+
+## Usage
+
+- Use the keyboard to type messages.
+- Press Enter to send a message.
+- Use slash commands to interact with the application:
+  - `/models`: List available models.
+  - `/load <model_name>`: Load a specific model.
+
+## Features
+- Chat with locally hosted LLMs.
+- Slash commands for model management.
+- Scrollable chat history.
+- Configuration management via `config.json`.
+- Optional logging to SD card.
+- Text-to-Speech (TTS) integration: Automatically generates and plays audio for assistant responses using TTS-WebUI API via I2S speaker.
+
+## TTS Setup
+1. Ensure TTS-WebUI is running on your network (e.g., http://192.168.1.98:3000).
+2. Update `config.json` with TTS settings:
+   - `tts_base_url`: Base URL of TTS server (default: "http://192.168.1.98:3000").
+   - `tts_model_name`: TTS model (default: "chatterbox").
+   - `tts_exaggeration`, `tts_cfg_weight`, `tts_temperature`: Sampler params (defaults: 0.5, 0.5, 1.4).
+   - `tts_device`: "cuda" or "cpu" (default: "cuda").
+   - `tts_dtype`: "float32" (default).
+   - `tts_chunked`: Enable chunked generation (default: true).
+3. Hardware: T-Deck I2S speaker connected (pins: WS=IO5, BCK=IO7, DOUT=IO6).
+4. Temp audio files saved to SD card (/sd/temp_audio.wav) and auto-deleted after playback.
+
+For low latency, TTS runs sequentially after text display; audio streams from API to I2S without persistent storage.
+
+- Chat with locally hosted LLMs.
+- Slash commands for model management.
+- Scrollable chat history.
+- Configuration management via `config.json`.
+- Optional logging to SD card.
+
+## API Documentation
+
+For more information on the LM Studio API, refer to the [LM Studio API Documentation](https://lmstudio.ai/docs).
 
 
 ### Configuration
@@ -87,41 +144,11 @@ Yes, Jedi Mast...
 
 
 
-### Typing input bar
-
-When I turn on the device, it will load the script into a chat terminal interface. At the bottom of the screen should be a text entry box, approimately 1 row high, the width of the screen. This will be the text input prompt, and wil have a ">" prompt indicating where the user can type.  As the user types and the text input fulls, the oldest text should be adjusted so that the currently typed text remains visible. This is only for visual convenience, the entire message should still be sent when the user hits enter or clicks send.
-
-
-### Status Bar
- 
-On the top of the display is another status bar, this time will be for model information for the currently loaded model.
-
-### Slash "/" Commands
-To save UI screen space, and as a throwback to the days of irc internet relay chat, I'd like to implement slash commands, which are special chat messages that begin with a forward slash and execute functions within the application. 
-
-For example, typing `/models` might display a formatted outut of all of the available models by requesting http://alfred.local:1234/api/v0/models and then parsing the json for the "id" field and returning a tidy list of models.
-
-`/load model_name` would unload the currently loaded model (if any) and load the model indicated by the model_name. The previous /models query uses an API to return model info incluing the context length, which /load will use to configure the chat session.
-
-
-### Scroll History
-
-Models will often return large responses which are not well suited for small device screens. To compensate for this, the script should support chat history. I'm not sure how MUCH chat history we should keep, but I should be able to scroll through a long response to read all of it. 
-
-### Logging to SD Card
-
-Chat logs should be optionally saved to the SD Card
-
-## Load Last
-
-The app should load the most recently used LLM model on startup. When a new model is loaded, the "currently loaded model" lambda should be updated. 
-
-
 ## OpenAI REST API
 
 No API Key is used at this time but we can send a mock key, sk-12345
 
-  - Base URL: http://alfred.local:1234/v1
+  - Base URL: http://192.168.1.98:1234/v1
   - Endpoints:
 
   ```
@@ -372,6 +399,29 @@ curl http://192.168.1.98:1234/api/v0/chat/completions \
 }
 ```
 
+## TODO
+
+### Slash "/" Commands
+To save UI screen space, and as a throwback to the days of irc internet relay chat, I'd like to implement slash commands, which are special chat messages that begin with a forward slash and execute functions within the application. 
+
+For example, typing `/models` might display a formatted outut of all of the available models by requesting http://192.168.1.98:1234/api/v0/models and then parsing the json for the "id" field and returning a tidy list of models.
+
+`/load model_name` would unload the currently loaded model (if any) and load the model indicated by the model_name. The previous /models query uses an API to return model info incluing the context length, which /load will use to configure the chat session.
+
+
+### Scroll History
+
+Models will often return large responses which are not well suited for small device screens. To compensate for this, the script should support chat history. I'm not sure how MUCH chat history we should keep, but I should be able to scroll through a long response to read all of it. 
+
+### Logging to SD Card
+
+Chat logs should be optionally saved to the SD Card
+
+### Load Last
+
+The app should load the most recently used LLM model on startup. When a new model is loaded, the "currently loaded model" lambda should be updated. 
+
+
 ## Future RoadMap
 
 Once the previously listed features are working as expected and it's time to investigate more features, I'd like to investigate
@@ -397,54 +447,3 @@ Once the previously listed features are working as expected and it's time to inv
 
 - Implement a `/sampler` command to view current sampler parameters.
 - Add a `/set_sampler <parameter> <value>` command to set a sampler parameter.
-
-## Installation
-
-1. Install CircuitPython 9.2.9 on your T-Deck.
-2. Install the required libraries using `circup`:
-   ```
-   circup install -r requirements.txt
-   ```
-3. Copy the `tdeck_chat_app` directory to your T-Deck's `CIRCUITPY` drive.
-4. Update the WiFi credentials in `main.py`.
-5. Run the application.
-
-## Usage
-
-- Use the keyboard to type messages.
-- Press Enter to send a message.
-- Use slash commands to interact with the application:
-  - `/models`: List available models.
-  - `/load <model_name>`: Load a specific model.
-
-## Features
-- Chat with locally hosted LLMs.
-- Slash commands for model management.
-- Scrollable chat history.
-- Configuration management via `config.json`.
-- Optional logging to SD card.
-- Text-to-Speech (TTS) integration: Automatically generates and plays audio for assistant responses using TTS-WebUI API via I2S speaker.
-
-## TTS Setup
-1. Ensure TTS-WebUI is running on your network (e.g., http://192.168.1.98:3000).
-2. Update `config.json` with TTS settings:
-   - `tts_base_url`: Base URL of TTS server (default: "http://192.168.1.98:3000").
-   - `tts_model_name`: TTS model (default: "chatterbox").
-   - `tts_exaggeration`, `tts_cfg_weight`, `tts_temperature`: Sampler params (defaults: 0.5, 0.5, 1.4).
-   - `tts_device`: "cuda" or "cpu" (default: "cuda").
-   - `tts_dtype`: "float32" (default).
-   - `tts_chunked`: Enable chunked generation (default: true).
-3. Hardware: T-Deck I2S speaker connected (pins: WS=IO5, BCK=IO7, DOUT=IO6).
-4. Temp audio files saved to SD card (/sd/temp_audio.wav) and auto-deleted after playback.
-
-For low latency, TTS runs sequentially after text display; audio streams from API to I2S without persistent storage.
-
-- Chat with locally hosted LLMs.
-- Slash commands for model management.
-- Scrollable chat history.
-- Configuration management via `config.json`.
-- Optional logging to SD card.
-
-## API Documentation
-
-For more information on the LM Studio API, refer to the [LM Studio API Documentation](https://lmstudio.ai/docs).
