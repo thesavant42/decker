@@ -6,26 +6,20 @@ T-Deck Local LLM Chat for Circuit Python 9.2.9
 
 To chat with models hosted locally on LM Studio over the RESTful APIs, using the T-Deck running Circuit Python 9.
 
-It's all about getting a working prototype, worry about the bells and whistles later. 
-
-
-# Instructions to LLM Model
-Ask clarifying questions, never assume that you know what my answer would be. It never hurts to ask.
-
 
 ### T-Deck Hardware considerations: 
 
   - Screen Dimensions: 320x240 pixels
-  - Display: eSPI TFT ST7789  (displayio installedc)
+  - Display: eSPI TFT ST7789  (displayio installed)
   - Keyboard Drivers: https://github.com/rgrizzell/CircuitPython_LILYGO_T-Deck (installed)
-  - Wifi: Handled by the RTOS, will be available for the application.
+  - Integrated i2s audio
 
 ### Configuration
-Configuration will be managed with a config file to centralize user-edited parameters. The file can be updated via /slash commands while the app is running.
+Configuration is managed with a config file to centralize user-edited parameters. The file can be updated via /slash commands while the app is running.
 
 ### Typing input bar
 
-When I turn on the device, it should load the script into a chat terminal interface. At the bottom of the screen should be a text entry box, approimately 1 row high, the width of the screen. This will be the text input prompt, and wil have a ">" prompt indicating where the user can type.  As the user types and the text input fulls, the oldest text should be adjusted so that the currently typed text remains visible. This is only for visual convenience, the entire message should still be sent when the user hits enter or clicks send.
+When I turn on the device, it will load the script into a chat terminal interface. At the bottom of the screen should be a text entry box, approimately 1 row high, the width of the screen. This will be the text input prompt, and wil have a ">" prompt indicating where the user can type.  As the user types and the text input fulls, the oldest text should be adjusted so that the currently typed text remains visible. This is only for visual convenience, the entire message should still be sent when the user hits enter or clicks send.
 
 
 ### Status Bar
@@ -114,8 +108,6 @@ POST /v1/completions
 }
 ```
 
-## PRO TIP: You can reuse existing OpenAI clients (in Python, JS, C#, etc) by switching up the "base URL" property to point to your LM Studio instead of OpenAI's servers.
-
 Supported payload parameters:
 
   - model
@@ -132,11 +124,11 @@ Supported payload parameters:
   - repeat_penalty
   - seed
 
-More detailed docs at https://platform.openai.com/docs/api-reference/chat/create
+  - More detailed docs at https://platform.openai.com/docs/api-reference/chat/create
 
 ## LM Studio API
 
-LM Studio now has its own REST API, in addition to OpenAI compatibility mode (learn more).
+LM Studio now has its own REST API, in addition to OpenAI compatibility mode.
 
 The REST API includes enhanced stats such as Token / Second and Time To First Token (TTFT), as well as rich information about models such as loaded vs unloaded, max context, quantization, and more.
 
@@ -148,7 +140,7 @@ The REST API includes enhanced stats such as Token / Second and Time To First To
   - POST /api/v0/completions - Text Completions (prompt → completion)
   - POST /api/v0/embeddings - Text Embeddings (text → embedding)
 
-http://alfred.local:1234/api/v0/models
+http://192.168.1.98:1234/api/v0/models
 
 ```json
 {
