@@ -16,6 +16,14 @@ To chat with models hosted locally on LM Studio over the RESTful APIs, using the
 
 This is all super alpha early stuff It works, but it's not fast yet.
 
+## Features
+
+-- Text to Text!
+-- Text to Speech!
+--... that's pretty much it.
+
+
+
 ### Status: Chat Mode
 
 Status: MVP for Chat functionality is working
